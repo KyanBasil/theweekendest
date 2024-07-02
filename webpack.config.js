@@ -1,113 +1,98 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin'); // Require  html-webpack-plugin plugin
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const WebpackShellPlugin = require('webpack-shell-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const path = require('path');
 
 const ENV = process.env.APP_ENV;
-const isTest = ENV === 'test'
+const isTest = ENV === 'test';
 const isProd = ENV === 'prod';
 
-function setDevTool() {  // function to set dev-tool depending on environment
-    if (isTest) {
-      return 'inline-source-map';
-    } else if (isProd) {
-      return 'source-map';
-    } else {
-      return 'eval-source-map';
-    }
+function setDevTool() {
+  if (isTest) {
+    return 'inline-source-map';
+  } else if (isProd) {
+    return 'source-map';
+  } else {
+    return 'eval-source-map';
+  }
 }
 
 const config = {
-  devtool: setDevTool(),  //Set the devtool
-  entry: __dirname + "/src/app/index.jsx", // webpack entry point. Module to start building dependency graph
+  mode: isProd ? 'production' : 'development',
+  devtool: setDevTool(),
+  entry: path.resolve(__dirname, "src/app/index.jsx"),
   output: {
-    path: __dirname + '/dist', // Folder to store generated bundle
-    filename: 'bundle.js',  // Name of generated bundle after build
-    publicPath: '/' // public URL of the output directory when referenced in a browser
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   resolve: {
+    extensions: ['.js', '.jsx'],
     fallback: {
       fs: false,
     }
   },
-  module: {  // where we defined file patterns and their loaders
-      rules: [
-          {
-            test: /\.jpe?g$|\.ico$|\.gif$|\.png$|\.woff$|\.ttf$|\.wav$|\.mp3$|\.webmanifest$|\.xml$/,
-            use: [
-                {
-                    loader: 'file-loader',
-                    options: {
-                        limit: 1000,
-                        name : '[name].[ext]'
-                    }
-                }
-            ],
-          },
-          {
-            test: /apple-app-site-association$/,
-            use: [
-                {
-                    loader: 'file-loader',
-                    options: {
-                        limit: 1000,
-                        name : '[name]'
-                    }
-                }
-            ],
-          },
-          {
-            test: /\.js[x]?$/,
-            use: 'babel-loader',
-            exclude: [
-              /node_modules/
-            ]
-          },
-          {
-            test: /\.(sass|scss)$/,
-            use: [{
-                loader: "style-loader" // creates style nodes from JS strings
-            }, {
-                loader: "css-loader" // translates CSS into CommonJS
-            }, {
-                loader: "sass-loader" // compiles Sass to CSS
-            }]
-          },
-          {
-            test: /\.css$/i,
-            use: ['style-loader', 'css-loader'],
-          },
-          {
-            test: /\.svg$/,
-            use: ['@svgr/webpack'],
-          },
-      ]
+  module: {
+    rules: [
+      {
+        test: /\.(jpe?g|ico|gif|png|woff|ttf|wav|mp3|webmanifest|xml)$/i,
+        type: 'asset/resource',
+      },
+      {
+        test: /apple-app-site-association$/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name]'
+        }
+      },
+      {
+        test: /\.jsx?$/,
+        use: 'babel-loader',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(sass|scss)$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      },
+    ]
   },
-  plugins: [  // Array of plugins to apply to build chunk
-      new HtmlWebpackPlugin({
-          template: __dirname + "/src/public/index.html",
-          inject: 'body'
-      }),
-      new Dotenv()
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "src/public/index.html"),
+      inject: 'body'
+    }),
+    new Dotenv()
   ],
-  devServer: {  // configuration for webpack-dev-server
-      contentBase: './src/public',  //source of static assets
-      port: 7700, // port to run dev-server
-      disableHostCheck: true,
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'src/public'),
+    },
+    port: 7700,
+    historyApiFallback: true,
+    hot: true,
+  },
+  optimization: {
+    minimizer: [new TerserPlugin()],
   },
 };
 
-// Minify and copy assets in production
-if(isProd) {  // plugins to use in a production environment
-    config.plugins.push(
-        new UglifyJSPlugin(),  // minify the chunk
-        new CopyWebpackPlugin([{  // copy assets to public folder
-          from: __dirname + '/src/public'
-        }])
-    );
-};
-
-
+if (isProd) {
+  config.plugins.push(
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'src/public'), to: 'public' }
+      ],
+    })
+  );
+}
 
 module.exports = config;
