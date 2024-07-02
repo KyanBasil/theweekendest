@@ -7,7 +7,6 @@ import { Helmet } from "react-helmet";
 import { debounce, filter, map } from 'lodash';
 import * as Cookies from 'es-cookie';
 import * as turf from './vendor/turf.js';
-import KofiButton from "kofi-button"
 
 import LegendModal from './legendModal.jsx';
 import ContactModal from './contactModal.jsx'
@@ -123,7 +122,7 @@ class Mapbox extends React.Component {
 
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: 'mapbox://styles/theweekendest/clro3gt8l005501p2datf8fd8?optimize=true',
+      style: 'mapbox://styles/apollocypher/cly4q1wjz00jq01qj3cupgdtt',
       center: center,
       bearing: MANHATTAN_TILT,
       minZoom: 9,
@@ -2570,10 +2569,9 @@ class Mapbox extends React.Component {
               }
               Powered by <a href='https://www.goodservice.io' target='_blank'>goodservice.io</a>.<br />
               Created by <a href='https://sunny.ng' target='_blank'>Sunny Ng</a>.<br />
-              <a href='/contact'>Contact Us</a>.<br />
+              Edited by ApolloCypher for a personal project.<br />
               Subway Route Symbols ®: Metropolitan Transportation Authority. Used with permission.<br />
               <a href='https://github.com/blahblahblah-/theweekendest' target='_blank'>Source code</a>.
-              <KofiButton color="#29abe0" title="Support Me on Ko-fi" kofiID="sunnyng" />
             </Header>
             </div>
         </Segment>
