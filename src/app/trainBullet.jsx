@@ -1,5 +1,4 @@
 import React from 'react';
-import { Segment, Header } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 class TrainBullet extends React.Component {
@@ -24,18 +23,20 @@ class TrainBullet extends React.Component {
   }
 
   style() {
-    const { style, textColor, color, size, name, alternateName } = this.props
-    let nameLength = name.length + (alternateName?.length || 0);
+    const { style, textColor, color, size, name, alternateName } = this.props;
     let styleHash = {
       ...style,
-      backgroundColor: `${color}`
+      backgroundColor: color || '#000000', // Provide a fallback color
     };
 
     if (textColor) {
-      styleHash.color = `${textColor}`;
+      styleHash.color = textColor;
     } else {
       styleHash.color = "#ffffff";
     }
+
+    // Add some debugging
+    console.log('TrainBullet style:', styleHash);
 
     return styleHash;
   }
@@ -52,7 +53,9 @@ class TrainBullet extends React.Component {
   }
 
   render() {
-    const { id, alternateName, link } = this.props;
+    const { id, alternateName, link, color, name } = this.props;
+    console.log('TrainBullet props:', { id, alternateName, link, color, name });
+
     if (link) {
       return(
         <Link as='div' className={this.classNames()} style={this.style()} to={`/trains/${id}`}>
@@ -67,4 +70,5 @@ class TrainBullet extends React.Component {
     )
   }
 }
-export default TrainBullet
+
+export default TrainBullet;

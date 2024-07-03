@@ -194,7 +194,6 @@ h1.yellow a, h3.yellow a {
   line-height: 1.5em;
   text-align: center;
   font-weight: bold;
-  color: #fff;
   margin: .25em;
   display: inline-block;
 
@@ -215,6 +214,15 @@ h1.yellow a, h3.yellow a {
   &.condensed {
     font-stretch: condensed;
   }
+}
+
+.route.bullet {
+  background-color: currentColor;
+  color: inherit;
+}
+
+.route.bullet .diamond-inner {
+  color: inherit;
 }
 
 .bullet {
@@ -447,20 +455,19 @@ h4.ui.top.attached.header.advisories-header {
   background-color: #ff8093!important;
 }
 
-
 .infobox .inner-infobox .ui.toggle.checkbox.slow input:checked~.box:before, .ui.toggle.checkbox.slow input:checked~label:before, .infobox .inner-infobox .ui.toggle.checkbox.slow input:focus:checked~.box:before, .ui.toggle.checkbox.slow input:focus:checked~label:before {
   background-color: #fbfb08!important;
 }
 
-
 .infobox .inner-infobox .ui.toggle.checkbox.long-headway input:checked~.box:before, .ui.toggle.checkbox.long-headway input:checked~label:before, .infobox .inner-infobox.long-headway .ui.toggle.checkbox input:focus:checked~.box:before, .ui.toggle.checkbox.long-headway input:focus:checked~label:before {
   background-color: #dddddd!important;
 }
+
 .chevrons {
   margin-left: 27px;
   margin-bottom: 3px;
- 
- .chevron::before {
+  
+  .chevron::before {
     border-style: solid;
     border-width: 0.25em 0.25em 0 0;
     content: '';
@@ -473,7 +480,7 @@ h4.ui.top.attached.header.advisories-header {
     vertical-align: top;
     width: 15px;
     top: 0;
-  } 
+  }
 }
 
 .trip-bullet {
@@ -515,22 +522,6 @@ h4.ui.top.attached.header.advisories-header {
   }
 }
 
-.ui.list.train-list {
-  .item .content {
-    &.bullet-container {
-      margin-right: 0.3em;
-    }
-
-    &.alternate-name {
-      line-height: 2em;
-    }
-  }
-
-  @media only screen and (max-width: 767px) {
-    display: none;
-  }
-}
-
 .ui.grid.mobile-train-grid {
   max-width: 100%;
   margin-left: -.5rem;
@@ -547,7 +538,6 @@ h4.ui.top.attached.header.advisories-header {
     display: none;
   }
 }
-
 
 .accessible-icon {
   margin-left: .2em;
